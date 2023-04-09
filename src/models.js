@@ -16,11 +16,22 @@ module.exports = {
     return user;
   },
   readAll: async () => {
-    return await prisma.user.findMany();
+    const users = await prisma.user.findMany();
+    const data = users.map((user) => {
+      const { id, email, role } = user;
+      return { id, email, role };
+    });
+
+    return data;
   },
   readOne: async (id) => {
     return await prisma.user.findUnique({
       where: { id: parseInt(id) },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+      },
     });
   },
   update: async (id, data) => {

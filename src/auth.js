@@ -11,11 +11,11 @@ module.exports = {
     const user = await prisma.user.findUnique({ where: { email } });
     console.log(user);
     if (!user) {
-      throw new Error("Invalid email or password");
+      return { message: "Invalid email or password" };
     }
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      throw new Error("Invalid email or password");
+      return { message: "Invalid email or password" };
     }
     const token = jwt.sign({ sub: user.id, role: user.role }, JWT_SECRET, {
       expiresIn: "1h",
@@ -29,6 +29,7 @@ module.exports = {
       return;
     }
     const [bearer, token] = authHeader.split(" ");
+
     if (bearer !== "Bearer" || !token) {
       res.status(401).send("Unauthorized");
       return;

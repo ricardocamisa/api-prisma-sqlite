@@ -21,7 +21,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/users", verify, async (req, res) => {
+app.get("/users", verify, isAdmin, async (req, res) => {
   try {
     const users = await readAll();
     res.json(users);
